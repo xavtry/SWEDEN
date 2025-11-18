@@ -1,1 +1,49 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>SVERIGE.EXE — Sweden OS in Browser</title>
+  <style>
+    body { margin:0; background:#000; overflow:hidden; }
+    #canvas { display:block; }
+    #loading {
+      position:fixed; top:0; left:0; width:100%; height:100%;
+      background:#004B87; color:#FFCC00; font-family:monospace;
+      display:flex; align-items:center; justify-content:center; flex-direction:column;
+      font-size:24px; z-index:999;
+    }
+    .flag { width:200px; height:125px; background:#006AA7; position:relative; margin:20px; }
+    .flag::before { content:''; position:absolute; left:70px; top:0; width:60px; height:100%; background:#FECC00; }
+    .flag::after { content:''; position:absolute; left:0; top:45px; width:100%; height:60px; background:#FECC00; }
+  </style>
+</head>
+<body>
+  <div id="loading">
+    <div class="flag"></div>
+    <h1>SVERIGE.EXE</h1>
+    <p>Loading Swedish Operating System...<br><span id="status">Initializing WebAssembly...</span></p>
+  </div>
+  <canvas id="canvas"></canvas>
 
+  <script>
+    const Module = {
+      preRun: [],
+      postRun: [],
+      onRuntimeInitialized: () => {
+        document.getElementById('loading').style.display = 'none';
+      },
+      print: (text) => console.log(text),
+      printErr: (text) => console.error(text),
+      canvas: (() => {
+        const canvas = document.getElementById('canvas');
+        canvas.addEventListener("webglcontextlost", (e) => { alert('WebGL context lost. Reload page.'); e.preventDefault(); }, false);
+        return canvas;
+      })(),
+      setStatus: (text) => {
+        document.getElementById('status').textContent = text;
+      }
+    };
+  </script>
+  <script src="sverige.js"></script>
+</body>
+</html>
